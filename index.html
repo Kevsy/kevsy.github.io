@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script>
+//let auth = false;
+const getData = (resource, auth) => {
+  return new Promise((resolve, reject) => {
+    let request = new XMLHttpRequest();
+    request.addEventListener("readystatechange", () => {
+      if (request.readyState === 4 && request.status === 200) {
+        let data = JSON.parse(request.responseText);
+        resolve(data);
+      } else if (request.readyState === 4) {
+        reject("error getting resources");
+      }
+    });
+    request.open("GET", resource);
+    request.send();
+  });
+};
+</script>
+</head>
+<body>
+<h2>Edge Discovery test</h2>
+<p>
+<!--Public IP address: <div id="yourIP"><script>
+getData("https://api.ipify.org?format=json",false)
+  .then((data) => {
+		document.getElementById("yourIP").innerHTML = data.ip;
+  })
+  .catch((err) => {
+    alert("promise rejected", err);
+  });
+</script></div>-->
+<br />
+Your closest edge is:<div id="yourEdge"><script>
+getData("https://stg-naap.api.vodafone.com/edgediscovery/v1/zone", 1)
+  .then((data) => {
+		document.getElementById("yourIP").innerHTML = data.zoneId;
+  })
+  .catch((err) => {
+    alert("edge promise rejected", err);
+  });
+
+</script></div>
+ 
+</p>
+</body>
+</html>
+
