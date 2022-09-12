@@ -14,7 +14,7 @@ const getData = (resource) => {
         reject("error getting resources");
       }
     });
-	request.setRequestHeader('Authorization', 'Bearer ' + "oUjFb8tasETGZAY7IykBBAuypFcw");
+	//request.setRequestHeader('Authorization', 'Bearer ' + "oUjFb8tasETGZAY7IykBBAuypFcw");
     request.open("GET", resource);
     request.send();
   });
@@ -30,7 +30,7 @@ getData("https://api.ipify.org?format=json")
 		document.getElementById("yourIP").innerHTML = data.ip;
   })
   .catch((err) => {
-    alert("promise rejected 1608", err);
+    alert("promise rejected 1612", err);
   });
 </script></div>
 <br />
