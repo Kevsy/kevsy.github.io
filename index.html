@@ -3,7 +3,7 @@
 <head>
 <script>
 //let auth = false;
-const getData = (resource, token) => {
+const getData = (resource) => {
   return new Promise((resolve, reject) => {
     let request = new XMLHttpRequest();
     request.addEventListener("readystatechange", () => {
@@ -14,7 +14,7 @@ const getData = (resource, token) => {
         reject("error getting resources");
       }
     });
-	request.setRequestHeader('Authorization', 'Bearer ' + token);
+	request.setRequestHeader('Authorization', 'Bearer ' + "oUjFb8tasETGZAY7IykBBAuypFcw");
     request.open("GET", resource);
     request.send();
   });
@@ -35,12 +35,12 @@ getData("https://api.ipify.org?format=json",false)
 </script></div>-->
 <br />
 Your closest edge is:<div id="yourEdge"><script>
-getData("https://stg-naap.api.vodafone.com/edgediscovery/v1/zone", "oUjFb8tasETGZAY7IykBBAuypFcw")
+getData("https://stg-naap.api.vodafone.com/edgediscovery/v1/zone")
   .then((data) => {
 		document.getElementById("yourIP").innerHTML = data.zoneId;
   })
   .catch((err) => {
-    alert("15:491", err);
+    alert("15:541", err);
   });
 
 </script></div>
