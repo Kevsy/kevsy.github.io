@@ -25,19 +25,19 @@ const getData = (resource) => {
 <h2>Edge Discovery test</h2>
 <p>
 Public IP address: <div id="yourIP"><script>
-getData("https://api.ipify.org?format=json",false)
+getData("https://api.ipify.org?format=json")
   .then((data) => {
 		document.getElementById("yourIP").innerHTML = data.ip;
   })
   .catch((err) => {
-    alert("promise rejected 15571", err);
+    alert("promise rejected 1608", err);
   });
 </script></div>
 <br />
 Your closest edge is:<div id="yourEdge"><script>
 //getData("https://stg-naap.api.vodafone.com/edgediscovery/v1/zone")
 //  .then((data) => {
-//		document.getElementById("yourIP").innerHTML = data.zoneId;
+//		document.getElementById("yourEdge").innerHTML = data.zoneId;
 //  })
 //  .catch((err) => {
 //    alert("15:541", err);
