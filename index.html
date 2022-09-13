@@ -15,11 +15,13 @@ const getData = (resource) => {
         reject("error getting resources");
       }
     });
-	request.setRequestHeader('Authorization', 'Bearer ' + "UtiOdrxXvVrXGuWlUkzljUDJbpxA");
+	//request.setRequestHeader('Authorization', 'Bearer ' + "UtiOdrxXvVrXGuWlUkzljUDJbpxA");
     request.open("GET", resource);
     request.send();
   });
 };
+
+
 </script>
 </head>
 <body>
@@ -31,11 +33,11 @@ getData("https://api.ipify.org?format=json")
 		document.getElementById("yourIP").innerHTML = data.ip;
   })
   .catch((err) => {
-    alert("promise rejected 1612", err);
+    alert("promise rejected 1125", err);
   });
 </script></div>
 <br />
-Your closest edge is:<div id="yourEdge"><script>
+Your closest edge is:<div id="yourEdge"><!--<script>
 getData("https://stg-naap.api.vodafone.com/edgediscovery/v1/zone")
   .then((data) => {
 		document.getElementById("yourEdge").innerHTML = data.zoneId;
@@ -44,7 +46,7 @@ getData("https://stg-naap.api.vodafone.com/edgediscovery/v1/zone")
     alert("11:06", err);
   });
 
-</script></div>
+</script>--></div>
  
 </p>
 </body>
