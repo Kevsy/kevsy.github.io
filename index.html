@@ -31,9 +31,9 @@ const getEdge = (resource) => {
         reject("error getting resources");
       }
     });
-	request.setRequestHeader('Authorization', 'Bearer ' + "t7vehBv7ZLPKK7FuXsn2JPHmsDUo");
-    request.open("GET", resource);
-    request.send();
+	request.open("GET", resource);
+    request.setRequestHeader('Authorization', 'Bearer ' + "t7vehBv7ZLPKK7FuXsn2JPHmsDUo");
+	request.send();
   });
 };
 
@@ -54,14 +54,13 @@ getData("https://api.ipify.org?format=json")
 </script></div>-->
 <br />
 Your closest edge is:<div id="yourEdge"><script>
-//getEdge("https://stg-naap.api.vodafone.com/edgediscovery/v1/zone")
-getEdge("https://api.ipify.org?format=json")
+getEdge("https://stg-naap.api.vodafone.com/edgediscovery/v1/zone")
   .then((data) => {
 		//document.getElementById("yourEdge").innerHTML = data.zoneId;
 		alert("Edge API called");
   })
   .catch((err) => {
-    alert("14:28", err);
+    alert("14:32", err);
   });
 
 </script></div>
