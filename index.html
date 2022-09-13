@@ -3,8 +3,7 @@
 <head>
 <link rel="icon" type="image/x-icon" sizes="16x16" href="/favicon.ico">
 <script>
-//let auth = false;
-/*const getData = (resource) => {
+const getData = (resource) => {
   return new Promise((resolve, reject) => {
     let request = new XMLHttpRequest();
     request.addEventListener("readystatechange", () => {
@@ -16,53 +15,25 @@
       }
     });
     request.open("GET", resource);
+    request.setRequestHeader('Authorization', 'Bearer ' + "t7vehBv7ZLPKK7FuXsn2JPHmsDUo");	
     request.send();
   });
-};*/
-
-const getEdge = (resource) => {
-  return new Promise((resolve, reject) => {
-    let request = new XMLHttpRequest();
-    request.addEventListener("readystatechange", () => {
-      if (request.readyState === 4 && request.status === 200) {
-        let data = JSON.parse(request.responseText);
-        resolve(data);
-      } else if (request.readyState === 4) {
-        reject("error getting resources");
-      }
-    });
-	request.open("GET", resource);
-    request.setRequestHeader('Authorization', 'Bearer ' + "t7vehBv7ZLPKK7FuXsn2JPHmsDUo");
-	request.send();
-  });
 };
-
-
 </script>
 </head>
 <body>
 <h2>Edge Discovery test</h2>
 <p>
-<!--Public IP address: <div id="yourIP"><script>
-getData("https://api.ipify.org?format=json")
+Public IP address: <div id="yourIP"><script>
+getData("https://stg-naap.api.vodafone.com/edgediscovery/v1/zone")
   .then((data) => {
-		document.getElementById("yourIP").innerHTML = data.ip;
-  })
-  .catch((err) => {
-    alert("promise rejected 1125", err);
-  });
-</script></div>-->
-<br />
-Your closest edge is:<div id="yourEdge"><script>
-getEdge("https://stg-naap.api.vodafone.com/edgediscovery/v1/zone")
-  .then((data) => {
-		//document.getElementById("yourEdge").innerHTML = data.zoneId;
 		alert("Edge API called");
   })
   .catch((err) => {
-    alert("14:55", err);
+    alert("promise rejected 1520", err);
   });
-
+</script></div>
+<br />
 </script></div>
  
 </p>
