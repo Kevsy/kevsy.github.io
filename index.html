@@ -54,13 +54,14 @@ getData("https://api.ipify.org?format=json")
 </script></div>
 <br />
 Your closest edge is:<div id="yourEdge"><script>
-getEdge("https://stg-naap.api.vodafone.com/edgediscovery/v1/zone")
+//getEdge("https://stg-naap.api.vodafone.com/edgediscovery/v1/zone")
+getEdge("https://api.ipify.org?format=json")
   .then((data) => {
 		//document.getElementById("yourEdge").innerHTML = data.zoneId;
 		alert("Edge API called");
   })
   .catch((err) => {
-    alert("14:00", err);
+    alert("14:14", err);
   });
 
 </script></div>
