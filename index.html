@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico">
+<link rel="icon" type="image/x-icon" sizes="16x16" href="/favicon.ico">
 <script>
 //let auth = false;
 const getData = (resource) => {
@@ -15,7 +15,23 @@ const getData = (resource) => {
         reject("error getting resources");
       }
     });
-	//request.setRequestHeader('Authorization', 'Bearer ' + "UtiOdrxXvVrXGuWlUkzljUDJbpxA");
+    request.open("GET", resource);
+    request.send();
+  });
+};
+
+const getEdge = (resource) => {
+  return new Promise((resolve, reject) => {
+    let request = new XMLHttpRequest();
+    request.addEventListener("readystatechange", () => {
+      if (request.readyState === 4 && request.status === 200) {
+        let data = JSON.parse(request.responseText);
+        resolve(data);
+      } else if (request.readyState === 4) {
+        reject("error getting resources");
+      }
+    });
+	request.setRequestHeader('Authorization', 'Bearer ' + "KazypCAiqNBpEPjsaPF9ZAQlS9rx");
     request.open("GET", resource);
     request.send();
   });
@@ -37,16 +53,16 @@ getData("https://api.ipify.org?format=json")
   });
 </script></div>
 <br />
-Your closest edge is:<div id="yourEdge"><!--<script>
-getData("https://stg-naap.api.vodafone.com/edgediscovery/v1/zone")
+Your closest edge is:<div id="yourEdge"><script>
+getEdge("https://stg-naap.api.vodafone.com/edgediscovery/v1/zone")
   .then((data) => {
 		document.getElementById("yourEdge").innerHTML = data.zoneId;
   })
   .catch((err) => {
-    alert("11:06", err);
+    alert("11:30", err);
   });
 
-</script>--></div>
+</script></div>
  
 </p>
 </body>
