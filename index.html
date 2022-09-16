@@ -15,7 +15,7 @@ const getData = (resource) => {
       }
     });
     request.open("GET", resource);
-    request.setRequestHeader('Authorization', 'Bearer ' + "VbIDZRc4tKKWfSvMSj1rYJcnlh5Z");	
+    request.setRequestHeader('Authorization', 'Bearer ' + "GaYqw0IXrJqjiobmP6Yo0U7XYgAM");	
     request.send();
   });
 };
@@ -24,7 +24,7 @@ const getData = (resource) => {
 <body>
 <h2>Edge Discovery test</h2>
 <p>
-Public IP address: <div id="yourIP"><script>
+Edge zone is: <div id="yourIP"><script>
 getData("https://stg-naap.api.vodafone.com/edgediscovery/v1/zone")
   .then((data) => {
 		alert("Edge API called");
