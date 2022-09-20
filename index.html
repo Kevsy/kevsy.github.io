@@ -3,7 +3,7 @@
 <head>
 <link rel="icon" type="image/x-icon" sizes="16x16" href="/favicon.ico">
 <script>
-const getData = (resource) => {
+const getData = (resource, tok) => {
   return new Promise((resolve, reject) => {
     let request = new XMLHttpRequest();
     request.addEventListener("readystatechange", () => {
@@ -15,7 +15,9 @@ const getData = (resource) => {
       }
     });
     request.open("GET", resource);
-    request.setRequestHeader('Authorization', 'Bearer ' + "DIG9YSVG7hs5TeRVMJhPZfRyrhMb");	
+	if(typeof tok !== 'undefined'){
+    request.setRequestHeader('Authorization', 'Bearer ' + tok);
+	};	
     request.send();
   });
 };
@@ -24,18 +26,27 @@ const getData = (resource) => {
 <body>
 <h2>Edge Discovery test</h2>
 <p>
-Edge zone is: <div id="yourIP"><script>
-getData("https://stg-naap.api.vodafone.com/edgediscovery/v1/zone")
+Your public IP address is: <div id="yourIP"><script>
+getData("https://api.ipify.org?format=json")
   .then((data) => {
-		alert("Edge API called");
+		document.getElementById("yourIP").innerHTML = data.ip;
   })
   .catch((err) => {
-    alert("promise rejected 1600", err);
+    alert("promise rejected 1125", err);
+  });
+</script>
+</p>
+<p>
+Your closest MEC zone is: <div id="yourEdge"><script>
+getData("https://stg-naap.api.vodafone.com/edgediscovery/v1/zone", "DIG9YSVG7hs5TeRVMJhPZfRyrhMb")
+  .then((data) => {
+		document.getElementById("yourEdge").innerHTML = data.zoneId;
+  })
+  .catch((err) => {
+    alert("promise rejected 1623", err);
   });
 </script></div>
 <br />
-</script></div>
- 
 </p>
 </body>
 </html>
