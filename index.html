@@ -32,7 +32,8 @@ getData("https://api.ipify.org?format=json")
 		document.getElementById("yourIP").innerHTML = data.ip;
   })
   .catch((err) => {
-    alert("promise rejected 1125", err);
+	let now = new Date();
+    document.getElementById("yourIP").innerHTML = "Error, could not retrieve public IP at " + now;
   });
 </script>
 </div>
@@ -44,7 +45,8 @@ getData("https://stg-naap.api.vodafone.com/edgediscovery/v1/zone", "DIG9YSVG7hs5
 		document.getElementById("yourEdge").innerHTML = data.zoneId;
   })
   .catch((err) => {
-    alert("promise rejected 1638", err);
+	let now = new Date();
+    document.getElementById("yourEdge").innerHTML = "Error, could not retrieve closest MEC at" + now;
   });
 </script></div>
 <br />
