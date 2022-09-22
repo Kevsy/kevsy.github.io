@@ -25,7 +25,7 @@ const getData = (resource, tok) => {
 </head>
 <body style="background-color:#E00201; color:#ffffff; font-size: 36px; font-family: Lucida Console;">
 <h1>Edge Discovery test</h1>
-<p style="font-size: 24px;">
+<p>
 Your public IP address is: <div id="yourIP"><script>
 getData("https://api.ipify.org?format=json")
   .then((data) => {
@@ -38,7 +38,7 @@ getData("https://api.ipify.org?format=json")
 </script>
 </div>
 </p>
-<p style="font-size: 24px;">
+<p>
 Your closest MEC zone is: <div id="yourEdge"><script>
 getData("https://stg-naap.api.vodafone.com/edgediscovery/v1/zone", "oTEXAcERCdnvIA6HFiFkyizLHGY3")
   .then((data) => {
