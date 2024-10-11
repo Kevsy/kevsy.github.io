@@ -1,1 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Local meeting time</title>
+<script>
+function calculateMeetingTime(){
+// Fetch name of local timezone
+const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+document.getElementById("local-timezone").innerHTML = tz;
 
+// Fetch offset of UTC against the local timezone
+const d = new Date();
+const o = d.getTimezoneOffset();
+// Convert h from hours to minutes - but check first for 0 offset (i.e. local = UTC. I'm looking at you, GMT)
+let h;
+if (o == 0)
+  h = 0;
+else
+  h = o/60;
+
+// UTC offset can be negative, but all we want is the number of hours difference at this point.
+// So remove any negative signs but first check in case there is no offset...
+//...we don't want to calculate 0/-1 any time soon.
+if (h == 0)
+  document.getElementById("utc-time-offset").innerHTML = "" ;
+else if (h < 0 )
+    document.getElementById("utc-time-offset").innerHTML = h*-1 ;
+else
+    document.getElementById("utc-time-offset").innerHTML = h;
+
+// fetch the UTC meeting time passed in the querystring
+const urlParams = new URLSearchParams(window.location.search);
+const umt = urlParams.get('meeting-time');
+document.getElementById("utc-meeting-time").innerHTML = umt;
+
+// Based on the local difference from UTC, do we say 'hour', 'hours', or 'the same time'?
+let diff;
+let phrase;
+
+if (h == 1 || h == -1)
+  diff = "hour";
+else if (h > 1 || h < -1 )
+  diff = "hours";
+else if (h == 0)
+  diff = "";
+  phrase = "the same as";
+
+if (h < 0)
+  phrase = "ahead of";
+else if (h > 0)
+  phrase = "behind";
+
+document.getElementById("diff").innerHTML = diff;
+document.getElementById("phrase").innerHTML = phrase;
+
+// drumroll please - what you've all been waiting for - when to join:
+// Note the use of *-100: this is to add the 00 to the meeting time
+// and the - is neeeded because getTimezoneOffset() returns the offset
+// in 'the opposite direction', i..e how UTC differs from local, not how local differs from UTC.
+
+let lmt = Number(umt) + h*-100;
+document.getElementById("your-meeting-time").innerHTML = lmt.toString();
+}
+</script>
+</head>
+<body style="font-size: 36px; font-family: Lucida Console;" onload="calculateMeetingTime()">
+<h1>Local meeting time</h1>
+
+<p> The meeting time in UTC is: <span id="utc-meeting-time"></span></p>
+
+<p> Your timezone is <span id="local-timezone"></span> which is currently <span id="utc-time-offset"></span> <span id="diff"></span> <span id="phrase"></span> UTC</p>
+
+<p><b>The meeting will be held at <span id="your-meeting-time"></span> in your timezone.</b>
+</p>
+</body>
+</html>
