@@ -2,65 +2,67 @@
 <html>
 <head>
 <title>Local meeting time</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <script>
+// This script converts a UTC meeting time to the end user's local time, based on their OS locale and current UTC offset. 
+  
 function calculateMeetingTime(){
-// Fetch name of local timezone
-const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-document.getElementById("local-timezone").innerHTML = tz;
 
-// Fetch offset of UTC against the local timezone
-const d = new Date();
-const o = d.getTimezoneOffset();
-// Convert h from hours to minutes - but check first for 0 offset (i.e. local = UTC. I'm looking at you, GMT)
-let h;
-if (o == 0)
-  h = 0;
-else
-  h = o/60;
+const tz = Intl.DateTimeFormat().resolvedOptions().timeZone; // name of local timezone
+const o = new Date().getTimezoneOffset(); // UTC offset compared to the local timezone
+const umt = new URLSearchParams(window.location.search).get('meeting-time'); // the UTC meeting time passed in the quesrystring
+  
+let h;      // Convert minutes to hours
+o == 0 ? h = 0 : h = o/60;  // ...but check for no offset (same as UTC, i.e. GMT,  or summer time in some UTC -1 offset zones)
 
-// UTC offset can be negative, but all we want is the number of hours difference at this point.
-// So remove any negative signs but first check in case there is no offset...
-//...we don't want to calculate 0/-1 any time soon.
-if (h == 0)
-  document.getElementById("utc-time-offset").innerHTML = "" ;
+let n; // Calculate the number of hours difference from UTC to local.   
+if (h == 0) 
+   n = "" ;
 else if (h < 0 )
-    document.getElementById("utc-time-offset").innerHTML = h*-1 ;
+   n = h*-1 ;
 else
-    document.getElementById("utc-time-offset").innerHTML = h;
+   n = h;
 
-// fetch the UTC meeting time passed in the querystring
-const urlParams = new URLSearchParams(window.location.search);
-const umt = urlParams.get('meeting-time');
-document.getElementById("utc-meeting-time").innerHTML = umt;
+let diff;    //  Determine if the difference should be worded as "hour", "hours", or none.
+let phrase;  //  Determine which preposition to use.
 
-// Based on the local difference from UTC, do we say 'hour', 'hours', or 'the same time'?
-let diff;
-let phrase;
-
-if (h == 1 || h == -1)
+if (h == 1 || h == -1 || h ==0.5 || h == -0.5)
   diff = "hour";
 else if (h > 1 || h < -1 )
   diff = "hours";
 else if (h == 0)
-  diff = "";
+  diff = ""; 
   phrase = "the same as";
 
-if (h < 0)
-  phrase = "ahead of";
-else if (h > 0)
-  phrase = "behind";
+h < 0 ? phrase = "ahead of": phrase = "behind";
 
+//   Calculate the local meeting time and render in 24-hour clock format.
+//   Note the use of h*-100: teh 100  is to add the '00 'to the meeting time
+//   and the negation (-) is neeeded because getTimezoneOffset() returns the offset
+//   in 'the opposite direction': how UTC differs from local, not how local differs from UTC.
+//   I.e. a UTC offset of -2 hours means local time is +2 hours offset to UTC   
+
+let tmp =  Number(umt) + (h*-100)
+let lmt =  tmp % 2400; 
+if (lmt == 0 )
+   lmt = "0000";  
+else if (lmt > 0 && lmt <=900)
+   lmt = "0" + lmt;
+
+// todo 
+// 1. try catch on the querystring parameter
+// 2. timezones with 30 minute offsets
+  
+ // Write out the results
+document.getElementById("local-timezone").innerHTML = tz; // write local timezone 
+document.getElementById("utc-time-offset").innerHTML = n;  // write the number of hours UTC offset 
+document.getElementById("utc-meeting-time").innerHTML = umt; // write the UTC meeting time  
+document.getElementById("your-meeting-time").innerHTML = lmt; // write the local meeting time, using the appropriate phrasing
 document.getElementById("diff").innerHTML = diff;
-document.getElementById("phrase").innerHTML = phrase;
+document.getElementById("phrase").innerHTML = phrase;  
 
-// drumroll please - what you've all been waiting for - when to join:
-// Note the use of *-100: this is to add the 00 to the meeting time
-// and the - is neeeded because getTimezoneOffset() returns the offset
-// in 'the opposite direction', i..e how UTC differs from local, not how local differs from UTC.
-
-let lmt = Number(umt) + h*-100;
-document.getElementById("your-meeting-time").innerHTML = lmt.toString();
 }
+  
 </script>
 </head>
 <body style="font-size: 36px; font-family: Lucida Console;" onload="calculateMeetingTime()">
@@ -71,6 +73,8 @@ document.getElementById("your-meeting-time").innerHTML = lmt.toString();
 <p> Your timezone is <span id="local-timezone"></span> which is currently <span id="utc-time-offset"></span> <span id="diff"></span> <span id="phrase"></span> UTC</p>
 
 <p><b>The meeting will be held at <span id="your-meeting-time"></span> in your timezone.</b>
+
+<p><i>Caveat: The script only calculates the difference at the point the page is requested- so be cautious when checking for March or October meetings since the clocks may change within that period.</i></p>  
 </p>
 </body>
 </html>
