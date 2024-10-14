@@ -37,7 +37,7 @@ else if (h == 0)
 h < 0 ? phrase = "ahead of": phrase = "behind";
 
 //   Calculate the local meeting time and render in 24-hour clock format.
-//   Note the use of h*-100: teh 100  is to add the '00 'to the meeting time
+//   Note the use of h*-100: the 100  is to add the '00 'to the meeting time
 //   and the negation (-) is neeeded because getTimezoneOffset() returns the offset
 //   in 'the opposite direction': how UTC differs from local, not how local differs from UTC.
 //   I.e. a UTC offset of -2 hours means local time is +2 hours offset to UTC   
