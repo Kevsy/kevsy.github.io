@@ -41,19 +41,11 @@ function convertUTCToLocalTime(utcTime) {
     return `${hours}:${minutes}`;
 }
 
-// Example usage:
-let urlParams = new URLSearchParams(window.location.search);
-let utcTime = urlParams.get('utcTime'); // e.g., "1036"
-if (utcTime) {
-    let localTime = convertUTCToLocalTime(utcTime);
-    document.getElementById("your-meeting-time").innerHTML = localTime;
-} else {
-    alert("Error: No UTC time provided in the querystring. Please try again with a utcTime parameter in the range 0000-2359");
-}
 
-document.getElementById("local-timezone").innerHTML = tz; // write local timezone 
-document.getElementById("utc-time-offset").innerHTML = offset;  // write the number of hours UTC offset 
-document.getElementById("utc-meeting-time").innerHTML = utcTime; // write the UTC meeting time  
+
+//document.getElementById("local-timezone").innerHTML = tz; // write local timezone 
+//document.getElementById("utc-time-offset").innerHTML = offset;  // write the number of hours UTC offset 
+//document.getElementById("utc-meeting-time").innerHTML = utcTime; // write the UTC meeting time  
 // document.getElementById("your-meeting-time").innerHTML = localTime; // write the local meeting time, using the appropriate phrasing
 //document.getElementById("diff").innerHTML = diff;
 //document.getElementById("phrase").innerHTML = phrase;  
@@ -64,14 +56,15 @@ document.getElementById("utc-meeting-time").innerHTML = utcTime; // write the UT
 <body style="font-size: 36px; font-family: Lucida Console;" onload="calculateMeetingTime()">
 <h1>Local meeting time</h1>
 
-<p> The meeting time in UTC is: <span id="utc-meeting-time"></span></p>
-
-<p> Your timezone is <span id="local-timezone"></span> which is currently <span id="utc-time-offset"></span> <span id="diff"></span> <span id="phrase"></span> UTC</p>
-
-<p><b>The meeting will be held at <span id="your-meeting-time"></span> in your timezone.</b>
-
-<p><i>Caveat: The script only calculates the difference at the point the page is requested- so be cautious when checking for March or October meetings since the clocks may change within that period.</i></p>  
-</p>  
+// Example usage:
+let urlParams = new URLSearchParams(window.location.search);
+let utcTime = urlParams.get('utcTime'); // e.g., "1036"
+if (utcTime) {
+    let localTime = convertUTCToLocalTime(utcTime);
+    document.write(localTime);
+} else {
+    alert("Error: No UTC time provided in the querystring. Please try again with a utcTime parameter in the range 0000-2359");
+}
 
   
 
