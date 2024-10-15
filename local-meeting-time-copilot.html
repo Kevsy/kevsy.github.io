@@ -18,14 +18,11 @@ function convertUTCToLocalTime(utcTime) {
     // Create a new Date object for the current date
     let currentDate = new Date();
 
-    // Set the hours and minutes to the current date object
+    // Set the hours and minutes to the current date object in UTC
     currentDate.setUTCHours(utcHours, utcMinutes, 0, 0);
 
-    // Get the local time offset in minutes and convert it to milliseconds
-    let offset = -currentDate.getTimezoneOffset() * 60000;
-
-    // Create a new Date object for the local time
-    let localTime = new Date(currentDate.getTime() + offset);
+    // Get the local time directly from the Date object
+    let localTime = new Date(currentDate.getTime());
 
     // Extract hours and minutes
     let hours = localTime.getHours();
@@ -54,6 +51,8 @@ function convertUTCToLocalTime(utcTime) {
 
     return `${hours}:${minutes} ${timeZoneName}. The local time is ${timeDifferencePhrase}.`;
 }
+
+
 
 
 
