@@ -5,52 +5,25 @@
   <title>Co-pilot local time</title>  
 <script>
 function convertUTCToLocalTime(utcTime) {
-    // Ensure the utcTime is a string of 4 digits
-    if (utcTime.length !== 4 || isNaN(utcTime)) {
-        console.error("Invalid UTC time format. Expected HHMM.");
-        return;
-    }
+    if (utcTime.length !== 4 || isNaN(utcTime)) return "Invalid UTC time format. Expected HHMM.";
 
-    // Extract hours and minutes from the UTC time
-    let utcHours = parseInt(utcTime.substring(0, 2), 10);
-    let utcMinutes = parseInt(utcTime.substring(2, 4), 10);
+    let date = new Date();
+    date.setUTCHours(parseInt(utcTime.slice(0, 2)), parseInt(utcTime.slice(2)), 0, 0);
 
-    // Create a new Date object for the current date
-    let currentDate = new Date();
-
-    // Set the hours and minutes to the current date object in UTC
-    currentDate.setUTCHours(utcHours, utcMinutes, 0, 0);
-
-    // Get the local time directly from the Date object
-    let localTime = new Date(currentDate.getTime());
-
-    // Extract hours and minutes
-    let hours = localTime.getHours();
-    let minutes = localTime.getMinutes();
-
-    // Format hours and minutes to always have two digits
-    hours = hours.toString().padStart(2, '0');
-    minutes = minutes.toString().padStart(2, '0');
-
-    // Get the local timezone name
+    let localTime = new Date(date.getTime());
+    let hours = localTime.getHours().toString().padStart(2, '0');
+    let minutes = localTime.getMinutes().toString().padStart(2, '0');
     let timeZoneName = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-    // Calculate the time difference in hours
-    let timeDifference = -currentDate.getTimezoneOffset() / 60;
-    let absTimeDifference = Math.abs(timeDifference);
-    let hourWord = absTimeDifference === 1 ? 'hour' : 'hours';
-    let timeDifferencePhrase;
+    let timeDifference = -date.getTimezoneOffset() / 60;
+    let absDiff = Math.abs(timeDifference);
+    let hourWord = absDiff === 1 ? 'hour' : absDiff === 0 ? '' : 'hours';
+    let timePhrase = timeDifference === 0 ? 'the same as UTC' : `${absDiff} ${hourWord} ${timeDifference > 0 ? 'ahead of' : 'behind'} UTC`;
 
-    if (timeDifference > 0) {
-        timeDifferencePhrase = `${absTimeDifference} ${hourWord} ahead of UTC`;
-    } else if (timeDifference < 0) {
-        timeDifferencePhrase = `${absTimeDifference} ${hourWord} behind UTC`;
-    } else {
-        timeDifferencePhrase = 'the same as UTC';
-    }
-
-    return `${hours}:${minutes} ${timeZoneName}. The local time is ${timeDifferencePhrase}.`;
+    return `${hours}:${minutes} ${timeZoneName}. The local time is ${timePhrase}.`;
 }
+
+
 
 
 
@@ -73,15 +46,8 @@ function convertUTCToLocalTime(utcTime) {
 
 <script>
 // Example usage:
-let urlParams = new URLSearchParams(window.location.search);
-let utcTime = urlParams.get('utcTime'); // e.g., "1036"
-if (utcTime) {
-    let localTime = convertUTCToLocalTime(utcTime);
-    console.log("Local Time:", localTime);
-} else {
-    console.log("No UTC time provided in query string.");
-}
-
+let utcTime = new URLSearchParams(window.location.search).get('utcTime'); // e.g., "1036"
+console.log(utcTime ? convertUTCToLocalTime(utcTime) : "No UTC time provided in query string.");
 </script>
 
  
