@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Co-pilot local time</title>  
+<script>
+function convertUTCToLocalTime(utcTime) {
+    // Ensure the utcTime is a string of 4 digits
+    if (utcTime.length !== 4 || isNaN(utcTime)) {
+        alert("Invalid UTC time format in querystring. Expected HHMM.");
+        return;
+    }
+
+    // Extract hours and minutes from the UTC time
+    let utcHours = parseInt(utcTime.substring(0, 2), 10);
+    let utcMinutes = parseInt(utcTime.substring(2, 4), 10);
+
+    // Create a new Date object for the current date
+    let currentDate = new Date();
+
+    // Set the hours and minutes to the current date object
+    currentDate.setUTCHours(utcHours, utcMinutes, 0, 0);
+
+    // Get the local time offset in minutes and convert it to milliseconds
+    let offset = currentDate.getTimezoneOffset() * 60000;
+
+    // Create a new Date object for the local time
+    let localTime = new Date(currentDate.getTime() - offset);
+
+    // Extract hours and minutes
+    let hours = localTime.getHours();
+    let minutes = localTime.getMinutes();
+
+    // Format hours and minutes to always have two digits
+    hours = hours.toString().padStart(2, '0');
+    minutes = minutes.toString().padStart(2, '0');
+
+    return `${hours}:${minutes}`;
+}
+
+// Example usage:
+let urlParams = new URLSearchParams(window.location.search);
+let utcTime = urlParams.get('utcTime'); // e.g., "1036"
+if (utcTime) {
+    let localTime = convertUTCToLocalTime(utcTime);
+    document.getElementById("your-meeting-time").innerHTML = localTime;
+} else {
+    alert("Error: No UTC time provided in the querystring. Please try again with a utcTime parameter in the range 0000-2359");
+}
+
+document.getElementById("local-timezone").innerHTML = tz; // write local timezone 
+document.getElementById("utc-time-offset").innerHTML = n;  // write the number of hours UTC offset 
+document.getElementById("utc-meeting-time").innerHTML = utcTime; // write the UTC meeting time  
+document.getElementById("your-meeting-time").innerHTML = localTime; // write the local meeting time, using the appropriate phrasing
+document.getElementById("diff").innerHTML = diff;
+document.getElementById("phrase").innerHTML = phrase;  
+</script>
+
+</head>
+
+<body style="font-size: 36px; font-family: Lucida Console;" onload="calculateMeetingTime()">
+<h1>Local meeting time</h1>
+
+<p> The meeting time in UTC is: <span id="utc-meeting-time"></span></p>
+
+<p> Your timezone is <span id="local-timezone"></span> which is currently <span id="utc-time-offset"></span> <span id="diff"></span> <span id="phrase"></span> UTC</p>
+
+<p><b>The meeting will be held at <span id="your-meeting-time"></span> in your timezone.</b>
+
+<p><i>Caveat: The script only calculates the difference at the point the page is requested- so be cautious when checking for March or October meetings since the clocks may change within that period.</i></p>  
+</p>  
+
+  
+
+
+
+</body>
+</html>
