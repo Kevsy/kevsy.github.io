@@ -1,80 +1,39 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Local meeting time</title>
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Co-pilot local time</title>  
 <script>
-// This script converts a UTC meeting time to the end user's local time, based on their OS locale and current UTC offset. 
-  
-function calculateMeetingTime(){
+function convertUTCToLocalTime(utcTime) {
+    if (utcTime.length !== 4 || isNaN(utcTime)) return "Invalid UTC time format. Expected HHMM.";
 
-const tz = Intl.DateTimeFormat().resolvedOptions().timeZone; // name of local timezone
-const o = new Date().getTimezoneOffset(); // UTC offset compared to the local timezone
-const umt = new URLSearchParams(window.location.search).get('meeting-time'); // the UTC meeting time passed in the quesrystring
-  
-let h;      // Convert minutes to hours
-o == 0 ? h = 0 : h = o/60;  // ...but check for no offset (same as UTC, i.e. GMT,  or summer time in some UTC -1 offset zones)
+    let date = new Date();
+    date.setUTCHours(parseInt(utcTime.slice(0, 2)), parseInt(utcTime.slice(2)), 0, 0);
 
-let n; // Calculate the number of hours difference from UTC to local.   
-if (h == 0) 
-   n = "" ;
-else if (h < 0 )
-   n = h*-1 ;
-else
-   n = h;
+    let localTime = new Date(date.getTime());
+    let hours = localTime.getHours().toString().padStart(2, '0');
+    let minutes = localTime.getMinutes().toString().padStart(2, '0');
+    let timeZoneName = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-let diff;    //  Determine if the difference should be worded as "hour", "hours", or none.
-let phrase;  //  Determine which preposition to use.
+    let timeDifference = -date.getTimezoneOffset() / 60;
+    let absDiff = Math.abs(timeDifference);
+    let hourWord = absDiff === 1 ? 'hour' : absDiff === 0 ? '' : 'hours';
+    let timePhrase = timeDifference === 0 ? 'the same as UTC' : `${absDiff} ${hourWord} ${timeDifference > 0 ? 'ahead of' : 'behind'} UTC`;
 
-if (h == 1 || h == -1 || h ==0.5 || h == -0.5)
-  diff = "hour";
-else if (h > 1 || h < -1 )
-  diff = "hours";
-else if (h == 0)
-  diff = ""; 
-  phrase = "the same as";
-
-h < 0 ? phrase = "ahead of": phrase = "behind";
-
-//   Calculate the local meeting time and render in 24-hour clock format.
-//   Note the use of h*-100: the 100  is to add the '00 'to the meeting time
-//   and the negation (-) is neeeded because getTimezoneOffset() returns the offset
-//   in 'the opposite direction': how UTC differs from local, not how local differs from UTC.
-//   I.e. a UTC offset of -2 hours means local time is +2 hours offset to UTC   
-
-let tmp =  Number(umt) + (h*-100)
-let lmt =  tmp % 2400; 
-if (lmt == 0 )
-   lmt = "0000";  
-else if (lmt > 0 && lmt <=900)
-   lmt = "0" + lmt;
-
-// todo 
-// 1. try catch on the querystring parameter
-// 2. timezones with 30 minute offsets
-  
- // Write out the results
-document.getElementById("local-timezone").innerHTML = tz; // write local timezone 
-document.getElementById("utc-time-offset").innerHTML = n;  // write the number of hours UTC offset 
-document.getElementById("utc-meeting-time").innerHTML = umt; // write the UTC meeting time  
-document.getElementById("your-meeting-time").innerHTML = lmt; // write the local meeting time, using the appropriate phrasing
-document.getElementById("diff").innerHTML = diff;
-document.getElementById("phrase").innerHTML = phrase;  
-
+    return `Your timezone is ${timeZoneName}, which is ${timePhrase}. The meeting will be held at ${hours}:${minutes} local time. `;
 }
-  
 </script>
+
 </head>
-<body style="font-size: 36px; font-family: Lucida Console;" onload="calculateMeetingTime()">
+
+<body style="font-size: 36px; font-family: Lucida Console;">
 <h1>Local meeting time</h1>
 
-<p> The meeting time in UTC is: <span id="utc-meeting-time"></span></p>
+<script>
+let utcTime = new URLSearchParams(window.location.search).get('utcTime'); // e.g., "1036"
+document.write (utcTime ? convertUTCToLocalTime(utcTime) : "No UTC time provided in query string.");
+</script>
 
-<p> Your timezone is <span id="local-timezone"></span> which is currently <span id="utc-time-offset"></span> <span id="diff"></span> <span id="phrase"></span> UTC</p>
-
-<p><b>The meeting will be held at <span id="your-meeting-time"></span> in your timezone.</b>
-
-<p><i>Caveat: The script only calculates the difference at the point the page is requested- so be cautious when checking for March or October meetings since the clocks may change within that period.</i></p>  
-</p>
+ 
 </body>
 </html>
