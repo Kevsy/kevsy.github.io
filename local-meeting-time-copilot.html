@@ -7,7 +7,7 @@
 function convertUTCToLocalTime(utcTime) {
     // Ensure the utcTime is a string of 4 digits
     if (utcTime.length !== 4 || isNaN(utcTime)) {
-        alert("Invalid UTC time format in querystring. Expected HHMM.");
+        console.error("Invalid UTC time format. Expected HHMM.");
         return;
     }
 
@@ -22,13 +22,10 @@ function convertUTCToLocalTime(utcTime) {
     currentDate.setUTCHours(utcHours, utcMinutes, 0, 0);
 
     // Get the local time offset in minutes and convert it to milliseconds
-    let offset = currentDate.getTimezoneOffset() * 60000;
+    let offset = -currentDate.getTimezoneOffset() * 60000;
 
-    // Get the name of the local timezone
-    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone; 
-  
     // Create a new Date object for the local time
-    let localTime = new Date(currentDate.getTime() - offset);
+    let localTime = new Date(currentDate.getTime() + offset);
 
     // Extract hours and minutes
     let hours = localTime.getHours();
@@ -38,8 +35,27 @@ function convertUTCToLocalTime(utcTime) {
     hours = hours.toString().padStart(2, '0');
     minutes = minutes.toString().padStart(2, '0');
 
-    return `${hours}:${minutes}`;
+    // Get the local timezone name
+    let timeZoneName = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+    // Calculate the time difference in hours
+    let timeDifference = -currentDate.getTimezoneOffset() / 60;
+    let absTimeDifference = Math.abs(timeDifference);
+    let hourWord = absTimeDifference === 1 ? 'hour' : 'hours';
+    let timeDifferencePhrase;
+
+    if (timeDifference > 0) {
+        timeDifferencePhrase = `${absTimeDifference} ${hourWord} ahead of UTC`;
+    } else if (timeDifference < 0) {
+        timeDifferencePhrase = `${absTimeDifference} ${hourWord} behind UTC`;
+    } else {
+        timeDifferencePhrase = 'the same as UTC';
+    }
+
+    return `${hours}:${minutes} ${timeZoneName}. The local time is ${timeDifferencePhrase}.`;
 }
+
+
 
 
 
@@ -62,9 +78,9 @@ let urlParams = new URLSearchParams(window.location.search);
 let utcTime = urlParams.get('utcTime'); // e.g., "1036"
 if (utcTime) {
     let localTime = convertUTCToLocalTime(utcTime);
-    document.write(localTime);
+    console.log("Local Time:", localTime);
 } else {
-    alert("Error: No UTC time provided in the querystring. Please try again with a utcTime parameter in the range 0000-2359");
+    console.log("No UTC time provided in query string.");
 }
 
 </script>
