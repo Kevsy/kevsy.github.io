@@ -20,17 +20,8 @@ function convertUTCToLocalTime(utcTime) {
     let hourWord = absDiff === 1 ? 'hour' : absDiff === 0 ? '' : 'hours';
     let timePhrase = timeDifference === 0 ? 'the same as UTC' : `${absDiff} ${hourWord} ${timeDifference > 0 ? 'ahead of' : 'behind'} UTC`;
 
-    return `${hours}:${minutes} ${timeZoneName}. The local time is ${timePhrase}.`;
+    return `Your timezone is ${timeZoneName}, which is ${timePhrase}. The meeting will be held at ${hours}:${minutes} local time. `;
 }
-
-
-
-
-
-
-
-
-
 //document.getElementById("local-timezone").innerHTML = tz; // write local timezone 
 //document.getElementById("utc-time-offset").innerHTML = offset;  // write the number of hours UTC offset 
 //document.getElementById("utc-meeting-time").innerHTML = utcTime; // write the UTC meeting time  
