@@ -24,6 +24,9 @@ function convertUTCToLocalTime(utcTime) {
     // Get the local time offset in minutes and convert it to milliseconds
     let offset = currentDate.getTimezoneOffset() * 60000;
 
+    // Get the name of the local timezone
+    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone; 
+  
     // Create a new Date object for the local time
     let localTime = new Date(currentDate.getTime() - offset);
 
@@ -49,9 +52,9 @@ if (utcTime) {
 }
 
 document.getElementById("local-timezone").innerHTML = tz; // write local timezone 
-document.getElementById("utc-time-offset").innerHTML = n;  // write the number of hours UTC offset 
+document.getElementById("utc-time-offset").innerHTML = offset;  // write the number of hours UTC offset 
 document.getElementById("utc-meeting-time").innerHTML = utcTime; // write the UTC meeting time  
-document.getElementById("your-meeting-time").innerHTML = localTime; // write the local meeting time, using the appropriate phrasing
+// document.getElementById("your-meeting-time").innerHTML = localTime; // write the local meeting time, using the appropriate phrasing
 document.getElementById("diff").innerHTML = diff;
 document.getElementById("phrase").innerHTML = phrase;  
 </script>
