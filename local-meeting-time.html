@@ -20,7 +20,7 @@ function convertUTCToLocalTime(utcTime) {
     let hourWord = absDiff === 1 ? 'hour' : absDiff === 0 ? '' : 'hours';
     let timePhrase = timeDifference === 0 ? 'the same as UTC' : `${absDiff} ${hourWord} ${timeDifference > 0 ? 'ahead of' : 'behind'} UTC`;
 
-    return `<P>The meeting is scheduled for ${utcTime} UTC.</p><p>Since your timezone is ${timeZoneName}, which is ${timePhrase}, the meeting will be held at <b>${hours}:${minutes}</b> local time.</p>`;
+    return `<P>The meeting is scheduled for ${utcTime} UTC.</p><p>Since your timezone is ${timeZoneName}, which is currently ${timePhrase}, the meeting will be held at <b>${hours}:${minutes}</b> local time.</p>`;
 }
 </script>
 
