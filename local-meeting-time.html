@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Co-pilot local time</title>  
+  <title>UTC->local</title>  
 <script>
 function convertUTCToLocalTime(utcTime) {
     if (utcTime.length !== 4 || isNaN(utcTime)) return "Invalid UTC time format. Expected HHMM.";
@@ -30,7 +30,7 @@ function convertUTCToLocalTime(utcTime) {
 <h1>Local meeting time</h1>
 
 <script>
-let utcTime = new URLSearchParams(window.location.search).get('utcTime'); // e.g., "1036"
+let utcTime = new URLSearchParams(window.location.search).get('utc-meeting-time'); // e.g., "1036"
 document.write (utcTime ? convertUTCToLocalTime(utcTime) : "No UTC time provided in query string.");
 </script>
 
