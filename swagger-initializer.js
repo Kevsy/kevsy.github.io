@@ -1,9 +1,11 @@
 window.onload = function() {
   //<editor-fold desc="Changeable Configuration Block">
 
-  // the following lines will be replaced by docker/configurator, when it runs in a docker-container
+  const urlParams = new URLSearchParams(window.location.search);
+  const yamllUrl = urlParams.get('url');
+
   window.ui = SwaggerUIBundle({
-    url: "https://raw.githubusercontent.com/camaraproject/SimpleEdgeDiscovery/refs/heads/main/code/API_definitions/simple-edge-discovery.yaml",
+    url: yamlUrl,
     dom_id: '#swagger-ui',
     deepLinking: true,
     presets: [
