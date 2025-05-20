@@ -1,11 +1,11 @@
+const urlParams = new URLSearchParams(window.location.search);
+const OASyaml = urlParams.get('url');
+
 window.onload = function() {
   //<editor-fold desc="Changeable Configuration Block">
 
-  const urlParams = new URLSearchParams(window.location.search);
-  const yamllUrl = urlParams.get('url');
-
   window.ui = SwaggerUIBundle({
-    url: yamlUrl,
+    url: OASyaml,
     dom_id: '#swagger-ui',
     deepLinking: true,
     presets: [
