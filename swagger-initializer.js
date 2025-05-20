@@ -1,5 +1,14 @@
 const urlParams = new URLSearchParams(window.location.search);
-const OASyaml = urlParams.get('url');
+const queryURL = urlParams.get('url');
+const url = new URL(queryURL);
+
+var OASyaml;
+
+if (url.hostname == "raw.githubusercontent.com" && url.pathname.startsWith("/camaraproject")) {
+OASyaml = queryURL;
+} else {
+OASyaml ="for CAMARA use only";
+}
 
 window.onload = function() {
   //<editor-fold desc="Changeable Configuration Block">
