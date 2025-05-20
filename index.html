@@ -1,56 +1,19 @@
+<!-- HTML for static distribution bundle build -->
 <!DOCTYPE html>
-<html>
-<head>
-<link rel="icon" type="image/x-icon" sizes="16x16" href="/favicon.ico">
-<script>
-const getData = (resource, tok) => {
-  return new Promise((resolve, reject) => {
-    let request = new XMLHttpRequest();
-    request.addEventListener("readystatechange", () => {
-      if (request.readyState === 4 && request.status === 200) {
-        let data = JSON.parse(request.responseText);
-        resolve(data);
-      } else if (request.readyState === 4) {
-        reject("error getting resources");
-      }
-    });
-    request.open("GET", resource);
-	if(typeof tok !== 'undefined'){
-    request.setRequestHeader('Authorization', 'Bearer ' + tok);
-	};	
-    request.send();
-  });
-};
-</script>
-</head>
-<body style="background-color:#E00201; color:#ffffff; font-size: 36px; font-family: Lucida Console;">
-<h1>Edge Discovery test</h1>
-<p>
-Your public IP address is: <div id="yourIP"><script>
-getData("https://api.ipify.org?format=json")
-  .then((data) => {
-		document.getElementById("yourIP").innerHTML = data.ip;
-  })
-  .catch((err) => {
-	let now = new Date();
-    document.getElementById("yourIP").innerHTML = "Error, could not retrieve public IP at " + now;
-  });
-</script>
-</div>
-</p>
-<p>
-Your closest MEC zone is: <div id="yourEdge"><script>
-getData("https://stg-naap.api.vodafone.com/edgediscovery/v1/zone", "{bearer token}")
-  .then((data) => {
-		document.getElementById("yourEdge").innerHTML = data.zoneId;
-  })
-  .catch((err) => {
-	let now = new Date();
-    document.getElementById("yourEdge").innerHTML = "Error, could not retrieve closest MEC at " + now;
-  });
-</script></div>
-<br />
-</p>
-</body>
-</html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Swagger UI</title>
+    <link rel="stylesheet" type="text/css" href="./swagger-ui.css" />
+    <link rel="stylesheet" type="text/css" href="index.css" />
+    <link rel="icon" type="image/png" href="./favicon-32x32.png" sizes="32x32" />
+    <link rel="icon" type="image/png" href="./favicon-16x16.png" sizes="16x16" />
+  </head>
 
+  <body>
+    <div id="swagger-ui"></div>
+    <script src="./swagger-ui-bundle.js" charset="UTF-8"> </script>
+    <script src="./swagger-ui-standalone-preset.js" charset="UTF-8"> </script>
+    <script src="./swagger-initializer.js" charset="UTF-8"> </script>
+  </body>
+</html>
