@@ -1,39 +1,50 @@
 // Simple and secure Swagger UI initializer for CAMARA project
-// Validates URLs to ensure only CAMARA project YAML files can be loaded
 
-function getValidatedSwaggerURL() {
+// Test if URLs are offical Camara YAML
+
+function isValidCamaraYamlUrl(urlString) {
     try {
-        const urlParams = new URLSearchParams(window.location.search);
-        const queryURL = urlParams.get('url');
-        
-        // Return null if no URL provided
-        if (!queryURL || queryURL.trim() === '') {
-            return null;
-        }
-        
-        // Parse and validate URL
-        const url = new URL(queryURL);
-        
-        // Security checks
-        const isValid = url.protocol === 'https:' &&
-                       url.hostname.toLowerCase() === 'raw.githubusercontent.com' &&
-                       url.pathname.startsWith('/camaraproject/') &&
-                       (url.pathname.toLowerCase().endsWith('.yaml') || url.pathname.toLowerCase().endsWith('.yml'));
-        
-        return isValid ? queryURL : null;
-        
-    } catch (error) {
-        // Invalid URL format
-        return null;
+        const url = new URL(urlString);
+        const pathname = url.pathname.toLowerCase();
+
+        return (
+            url.protocol === 'https:' &&
+            url.hostname.toLowerCase() === 'raw.githubusercontent.com' &&
+            pathname.startsWith('/camaraproject/') &&
+            (
+                pathname.endsWith('.yaml') ||
+                pathname.endsWith('.yml')
+            )
+        );
+    } catch {
+        return false;
     }
 }
 
-window.onload = function() {
-    // Get validated URL or use default message
-    const validatedURL = getValidatedSwaggerURL();
-    const swaggerURL = validatedURL || 'Please provide a valid CAMARA project YAML URL using: ?url=https://raw.githubusercontent.com/camaraproject/[repo]/[path]/[file].yaml';
-    
-    // Initialize Swagger UI
+// Check the querystring
+
+function validateQuerystringUrl() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const queryURL = urlParams.get('url');
+
+    if (!queryURL || queryURL.trim() === '') {
+        return null;
+    }
+
+    return isValidCamaraYamlUrl(queryURL.trim())
+        ? queryURL.trim()
+        : null;
+}
+
+// Call the querystring check upon page load
+
+window.onload = function () {
+    const validatedURL = validateQuerystringUrl();
+
+    const swaggerURL =
+        validatedURL ||
+        'Please provide a valid CAMARA project YAML URL using: ?url=https://raw.githubusercontent.com/camaraproject/[repo]/[path]/[file].yaml';
+
     window.ui = SwaggerUIBundle({
         url: swaggerURL,
         dom_id: '#swagger-ui',
@@ -45,60 +56,40 @@ window.onload = function() {
         plugins: [
             SwaggerUIBundle.plugins.DownloadUrl
         ],
-        layout: "StandaloneLayout"
+        layout: 'StandaloneLayout'
     });
 };
 
-
-  // Check the URL in the form and deny submission for anything that is not raw CAMARA YAML.
-  // But! first check the form is in the DOM, because the page is built dynamically.
-
-function installCameraUrlValidation() {
+// Check any URL submitted via the form
+// First check the form is in the DOM because React builds the page dynamically.
+function validateFormUrl() {
     const button = document.querySelector('.download-url-button');
 
     if (!button) {
-        setTimeout(installCameraUrlValidation, 500);
+        setTimeout(validateFormUrl, 500);
         return;
     }
 
-    button.addEventListener('click', function(event) {
+    button.addEventListener(
+        'click',
+        function (event) {
+            const input = document.getElementById('download-url-input');
+            const urlValue = input?.value?.trim() || '';
 
-        const input = document.getElementById('download-url-input');
-
-        try {
-            const url = new URL(input.value.trim());
-
-            const isValid =
-                url.protocol === 'https:' &&
-                url.hostname.toLowerCase() === 'raw.githubusercontent.com' &&
-                url.pathname.startsWith('/camaraproject/') &&
-                (
-                    url.pathname.toLowerCase().endsWith('.yaml') ||
-                    url.pathname.toLowerCase().endsWith('.yml')
-                );
-
-            if (!isValid) {
+            if (!isValidCamaraYamlUrl(urlValue)) {
                 event.preventDefault();
                 event.stopPropagation();
                 event.stopImmediatePropagation();
 
                 alert(
-                    'Only CAMARA API YAMLs hosted on raw.githubusercontent.com will be rendered on this page.'
+                    'Only CAMARA API YAMLs hosted at https://raw.githubusercontent.com/camaraproject/ are supported.'
                 );
 
                 return false;
             }
-
-        } catch (e) {
-            event.preventDefault();
-            event.stopPropagation();
-            event.stopImmediatePropagation();
-
-            alert('Invalid URL.');
-
-            return false;
-        }
-    }, true);
+        },
+        true
+    );
 }
 
-installCameraUrlValidation();
+validateFormUrl();
