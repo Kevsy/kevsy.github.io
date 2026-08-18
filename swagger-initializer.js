@@ -60,36 +60,19 @@ window.onload = function () {
     });
 };
 
-// Check any URL submitted via the form
-// First check the form is in the DOM because React builds the page dynamically.
-function validateFormUrl() {
-    const button = document.querySelector('.download-url-button');
-
-    if (!button) {
-        setTimeout(validateFormUrl, 500);
-        return;
-    }
-
-    button.addEventListener(
-        'click',
-        function (event) {
-            const input = document.getElementById('download-url-input');
-            const urlValue = input?.value?.trim() || '';
-
-            if (!isValidCamaraYamlUrl(urlValue)) {
-                event.preventDefault();
-                event.stopPropagation();
-                event.stopImmediatePropagation();
-
-                alert(
-                    'Only CAMARA API YAMLs hosted at https://raw.githubusercontent.com/camaraproject/ are supported.'
-                );
-
-                return false;
-            }
-        },
-        true
-    );
+// Remove the form once the UI has rendered
+function removeDownloadUrlWrapper() {
+  const el = document.querySelector(".download-url-wrapper");
+  if (el) {
+    el.remove();
+    return true;
+  }
+  return false;
 }
 
-validateFormUrl();
+// Swagger renders asynchronously, so retry briefly
+const interval = setInterval(() => {
+  if (removeDownloadUrlWrapper()) {
+    clearInterval(interval);
+  }
+}, 250);
