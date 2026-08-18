@@ -1,5 +1,14 @@
 // Simple and secure Swagger UI initializer for CAMARA project
 
+// make sure the form does not appear even briefly before we remove it
+// Need to do it this way because of React dynamically building the page...
+// meaning the form may be created before we remove it.
+
+const style = document.createElement("style");
+style.textContent = ".download-url-wrapper{display:none!important}";
+document.head.appendChild(style);
+
+
 // Test if URLs are offical Camara YAML
 
 function isValidCamaraYamlUrl(urlString) {
@@ -70,7 +79,7 @@ function removeDownloadUrlWrapper() {
   return false;
 }
 
-// Swagger renders asynchronously, so retry briefly
+// Swagger renders asynchronously, so retry the form removal briefly
 const interval = setInterval(() => {
   if (removeDownloadUrlWrapper()) {
     clearInterval(interval);
